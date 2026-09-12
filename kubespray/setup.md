@@ -53,6 +53,9 @@ kubespray/
 이렇게 복사된다.
 어떤 VM이 Master이고 어떤 VM이 worker인지 Kubespray에 알려줘야 한다.
 
+잠시 ssh설정에 다녀오자. Kubespray가 실제로 worker들에 들어갈 수 있는지 확인하기 위해
+필요한 단계이다. k8s-infra-playground/ssh/setup.md에 다녀오자.
+
 inventory.ini 작성을 위해
 ```bash
 nano inventory/mycluster/inventory.ini
@@ -89,6 +92,10 @@ worker2
 [k8s_cluster:children]
 kube_control_plane
 kube_node
+```
+이렇게 복사해서 붙여넣는다. 본 k8s-infra-playground/ssh/setup.md 에서 본듯이
+똑같이 나오면 된다.
+
 ## 5. Kubernetes 설치
 ```bash
 ansible-playbook \
@@ -96,25 +103,9 @@ ansible-playbook \
   --become --become-user=root \
   cluster.yml
 ```
-이렇게 복사해서 붙여넣는다.
+fail없이 다 끝난다면 cilium이 아닌 calico가 설치되어있을 것이다.
+내 작업에서는 calico CNI구성이 fail되고 나머지 구성은 다 괜찮게 되었다.
 
-
-주요 구성:
-```text
-Control Plane
-├─ kube-apiserver
-├─ kube-controller-manager
-├─ kube-scheduler
-└─ etcd
-
-Worker
-├─ kubelet
-├─ containerd
-└─ kube-proxy
-```
-
-잠시 ssh설정에 다녀오자. Kubespray가 실제로 worker들에 들어갈 수 있는지 확인하기 위해
-필요한 단계이다. k8s-infra-playground/ssh/setup.md에 다녀오자.
 
 ## 6. Node 상태 확인
 ```bash
@@ -153,8 +144,4 @@ ls /opt/cni/bin/
 ## 9. CNI 문제 해결 방향
 
 Kubespray에서 CNI를 직접 설치하는 대신
-Kubernetes Cluster를 먼저 구성한 후 Cilium을 별도로 설치하는 방식으로 변경했다.
-
-설정:
-
-kube_network_plugin: cni
+Cilium을 별도로 설치하는 방식으로 변경했다.
