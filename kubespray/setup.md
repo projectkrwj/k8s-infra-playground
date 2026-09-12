@@ -38,24 +38,30 @@ ansible-inventory \
 클러스터 구성:
 
 etcd
+
 └── master
 
 kube_control_plane
+
 └── master
 
 kube_node
+
 ├── worker1
 └── worker2
 
 즉:
 
 master
+
  └─ Control Plane + etcd
 
 worker1
+
  └─ Worker
 
 worker2
+
  └─ Worker
  
 ## 5. Kubernetes 설치
