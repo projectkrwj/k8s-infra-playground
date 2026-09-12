@@ -9,7 +9,8 @@ Kubespray는 Ansible을 이용해 여러 Node에 원격으로 명령을 실행�
 
 ## 1. SSH 접속 확인
 
-master에서 worker1로 접속한다.
+현재는 master의 public key가 worker1, 2 각각에 저장이 되어 있지 않기 때문에
+master에서 worker1로 접속하는 것이 불가능하다. 적어도 password를 입력해야 한다.
 
 ```bash
 ssh worker1
@@ -18,11 +19,9 @@ worker2:
 ```bash
 ssh worker2
 ```
-또는 IP를 직접 사용할 수 있다.
-```bash
-ssh ubuntu@10.86.202.84
-ssh ubuntu@10.86.202.137
-```
+이렇게 접근할 수 있어야 한다.
+
+
 ## 2. SSH Key 생성
 
 master에서 SSH Key를 생성한다.
