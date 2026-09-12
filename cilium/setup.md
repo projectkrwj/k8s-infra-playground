@@ -3,6 +3,10 @@
 ## 1. Cilium 설치
 
 ```bash
+curl -L --remote-name https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz
+tar xzvf cilium-linux-amd64.tar.gz
+sudo mv cilium /usr/local/bin
+
 cilium install
 ```
 실습 당시 설치된 버전:
@@ -27,6 +31,7 @@ Cilium Agent는 각 Node에 DaemonSet 형태로 실행된다.
 master   → cilium
 worker1  → cilium
 worker2  → cilium
+
 ## 3. Cilium Pod 확인
 ```bash
 kubectl -n kube-system get pods -o wide
@@ -51,6 +56,7 @@ INTERNALIP
 
 CILIUMINTERNALIP
 → Cilium datapath에서 사용하는 주소
+
 ## 5. Cilium 상태에서 Datapath 확인
 ```bash
 cilium status
