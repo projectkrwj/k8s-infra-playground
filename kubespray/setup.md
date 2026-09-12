@@ -1,4 +1,4 @@
-# 02. Kubespray Setup
+# 03. Kubespray Setup
 
 ## 1. Kubespray 이동
 
@@ -36,34 +36,28 @@ ansible-inventory \
   --graph
 ```
 클러스터 구성:
-
+```text
 etcd
-
 └── master
 
 kube_control_plane
-
 └── master
 
 kube_node
-
 ├── worker1
 └── worker2
-
+```
 즉:
-
+```text
 master
-
  └─ Control Plane + etcd
 
 worker1
-
  └─ Worker
 
 worker2
-
  └─ Worker
- 
+ ```
 ## 5. Kubernetes 설치
 ```bash
 ansible-playbook \
@@ -74,7 +68,7 @@ ansible-playbook \
 Kubespray가 각 Node에 Kubernetes 구성 요소를 설치한다.
 
 주요 구성:
-
+```text
 Control Plane
 ├─ kube-apiserver
 ├─ kube-controller-manager
@@ -85,7 +79,7 @@ Worker
 ├─ kubelet
 ├─ containerd
 └─ kube-proxy
-
+```
 ## 6. Node 상태 확인
 ```bash
 kubectl get nodes
