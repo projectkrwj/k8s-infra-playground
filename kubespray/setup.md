@@ -1,9 +1,10 @@
 # 03. Kubespray Setup
 
-## 1. Kubespray 이동
+## 1. Kubespray 설치
 
 ```bash
-cd ~/kubespray
+git clone https://github.com/kubernetes-sigs/kubespray.git
+cd kubespray
 ```
 ## 2. Kubespray 버전 확인
 ```bash
@@ -16,7 +17,11 @@ v2.31.0-126-g8e8751465
 Kubespray를 이용하여 Kubernetes Cluster를 구성한다.
 
 ## 3. Python / Ansible 환경 확인
+우선 가상환경을 만들고 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+
 python --version
 ansible --version
 pip check
@@ -29,11 +34,28 @@ Python       3.11.0rc1
 Ansible      11.13.0
 ansible-core 2.18.19
 
-## 4. Inventory 확인
 ```bash
-ansible-inventory \
-  -i inventory/mycluster/hosts.yaml \
-  --graph
+pip install -r requirements.txt
+```
+여기까지가 Kubespray 실행에 필요한 python패키지를 .venv 안에 설치하는 과정.
+
+## 4. Inventory 만들기
+```bash
+cp -rfp inventory/sample inventory/mycluster
+```
+그러면 
+```text
+kubespray/
+└── inventory/
+    ├── sample/
+    └── mycluster/    ← 우리가 사용할 클러스터 설정
+```
+이렇게 복사된다.
+어떤 VM이 Master이고 어떤 VM이 worker인지 Kubespray에 알려줘야 한다.
+
+inventory.ini 작성을 위해
+```bash
+nano inventory/mycluster/inventory.ini
 ```
 클러스터 구성:
 ```text
@@ -48,16 +70,25 @@ kube_node
 └── worker2
 ```
 즉:
-```text
+```bash
+[all]
+master ansible_host=10.86.202.17
+worker1 ansible_host=10.86.202.84
+worker2 ansible_host=10.86.202.137
+
+[kube_control_plane]
 master
- └─ Control Plane + etcd
 
+[etcd]
+master
+
+[kube_node]
 worker1
- └─ Worker
-
 worker2
- └─ Worker
- ```
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
 ## 5. Kubernetes 설치
 ```bash
 ansible-playbook \
@@ -65,7 +96,8 @@ ansible-playbook \
   --become --become-user=root \
   cluster.yml
 ```
-Kubespray가 각 Node에 Kubernetes 구성 요소를 설치한다.
+이렇게 복사해서 붙여넣는다.
+
 
 주요 구성:
 ```text
@@ -80,6 +112,10 @@ Worker
 ├─ containerd
 └─ kube-proxy
 ```
+
+잠시 ssh설정에 다녀오자. Kubespray가 실제로 worker들에 들어갈 수 있는지 확인하기 위해
+필요한 단계이다. k8s-infra-playground/ssh/setup.md에 다녀오자.
+
 ## 6. Node 상태 확인
 ```bash
 kubectl get nodes
