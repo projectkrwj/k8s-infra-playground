@@ -126,17 +126,21 @@ http://172.21.195.79:9090/
 요 웹으로 접근할 수 있다.
 
 prometheus에
+```bash
 100 - (
   avg by (instance) (
     rate(node_cpu_seconds_total{mode="idle"}[5m])
   ) * 100
 )
+```
 넣고 execute하면
 cpu사용량을 볼 수 있음.
+```text
 {instance="10.86.202.137:9100"}	9.357407407407422
 {instance="10.86.202.17:9100"}	13.694444444444457
 {instance="10.86.202.84:9100"}	7.609259259259261
-
+```
+```bash
 100 * (
   1 - (
     node_memory_MemAvailable_bytes
@@ -144,10 +148,11 @@ cpu사용량을 볼 수 있음.
     node_memory_MemTotal_bytes
   )
 )
-
+```
 넣고 execute하면
 메모리 사용량을 볼 수 있음.
+```text
 {container="node-exporter", endpoint="http-metrics", instance="10.86.202.137:9100", job="node-exporter", namespace="monitoring", pod="monitoring-prometheus-node-exporter-47psd", service="monitoring-prometheus-node-exporter"}	31.512767229810134
 {container="node-exporter", endpoint="http-metrics", instance="10.86.202.17:9100", job="node-exporter", namespace="monitoring", pod="monitoring-prometheus-node-exporter-rqnj7", service="monitoring-prometheus-node-exporter"}	34.34504952079234
 {container="node-exporter", endpoint="http-metrics", instance="10.86.202.84:9100", job="node-exporter", namespace="monitoring", pod="monitoring-prometheus-node-exporter-xr26r", service="monitoring-prometheus-node-exporter"}  25.516159290867236
-
+```
