@@ -78,3 +78,13 @@ tunnelProtocol: vxlan
 
 metircs의 설정이 드러난 것을 볼 수 있다.
 
+cilium자체가 재부팅되면서 pod의 이름도 달라졌다.
+적용해서 cilium의 metrics의 포트를 찾아보자
+
+kubectl exec -n kube-system cilium-5hphb -- ss -lnt
+
+LISTEN 0      4096               *:9962             *:*
+
+실제로 사용하는 9962포트가 열린 것을 확인할 수 있다.
+
+
